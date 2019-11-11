@@ -58,5 +58,29 @@ public class Prod extends Node {
         return b.toString();
     }
 
+    @Override
+    Node diff(Variable var) {
+        Sum r = new Sum();
+        for(int i=0;i<args.size();i++){
+            Prod m= new Prod();
+            for(int j=0;j<args.size();j++){
+                Node f = args.get(j);
+                if(j==i)m.mul(f.diff(var));
+                else m.mul(f);
+            }
+            r.add(m);
+        }
+        if (r.getArgumentsCount() == 0 || r.isZero()) {
+            return new Constant(0);
+        }
+        return r;
+    }
 
+    @Override
+    boolean isZero() {
+        for (Node n:this.args) {
+            if(n.isZero()) return true;
+        }
+        return false;
+    }
 }

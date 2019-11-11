@@ -23,4 +23,13 @@ public class Constant extends Node {
         return sign<0?sgn+format.format(this.value)+")":sgn+format.format(this.value);
     }
 
+    @Override
+    Node diff(Variable var) {
+        return new Constant(0);
+    }
+
+    @Override
+    boolean isZero() {
+        return this.value == 0;
+    }
 }
