@@ -207,4 +207,17 @@ public class Matrix {
         }
         return sqrt(answer);
     }
+    //Kartkówka
+    Matrix sumRows() {
+        Matrix m = new Matrix(1, this.cols);
+        for (int i = 0; i < this.cols; i++) {
+            double sum = 0;
+            for (int j = 0; j < this.rows; j++) {
+                sum += this.get(j,i);
+            }
+            //0 ponieważ indexuje miejsca w macierzy od 0
+            m.set(0,i,sum);
+        }
+        return m;
+    }
 }

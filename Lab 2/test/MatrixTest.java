@@ -194,4 +194,11 @@ public class MatrixTest {
         Matrix testing = new Matrix(new double[][] {{1,2,3},{3,4}});
         assertEquals(6.2449979983984, testing.frobenius(), 0.001);
     }
+
+    @Test
+    public void sumRows() {
+        Matrix m = new Matrix(new double[][]{{1,2,3},{4,5,6},{7,8,9}});
+        Matrix row = m.sumRows();
+        assertEquals("[[12.0, 15.0, 18.0]]", row.toString());
+    }
 }
