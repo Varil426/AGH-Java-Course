@@ -64,7 +64,7 @@ public class Sum extends Node {
         }
         Sum r = new Sum();
         for (Node n:list) {
-            r.add(n.diff(var));
+            if(!n.diff(var).isZero()) r.add(n.diff(var));
         }
         return r;
     }

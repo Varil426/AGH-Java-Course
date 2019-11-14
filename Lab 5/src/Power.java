@@ -29,7 +29,8 @@ public class Power extends Node {
         b.append(argString);
         if(useBracket)b.append(")");
         b.append("^");
-        b.append(p);
+        if(p == (int) p)b.append((int) p);
+        else b.append(p);
         return b.toString();
     }
 

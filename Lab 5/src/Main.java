@@ -102,11 +102,15 @@ public class Main {
         System.out.print("f(x,y)=");
         System.out.println(circle.toString());
 
-        Node dx = circle.diff(x);
         System.out.print("d f(x,y)/dx=");
+        Node dx = circle.diff(x);
         System.out.println(dx.toString());
         System.out.print("d f(x,y)/dy=");
         Node dy = circle.diff(y);
         System.out.println(dy.toString());
+        //Test of Exp
+        Exp e1 = new Exp(new Variable("z", -24));
+        System.out.println(e1.toString());
+        System.out.println(e1.diff(new Variable("z")).toString());
     }
 }

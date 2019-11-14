@@ -48,10 +48,11 @@ public class Prod extends Node {
 
     public String toString(){
         StringBuilder b =  new StringBuilder();
+        Prod simple = this.simplify();
         if(sign<0)b.append("-");
-        for (int i = 0; i < this.args.size(); i++) {
-            b.append(this.args.get(i).toString());
-            if(i<this.args.size()-1) {
+        for (int i = 0; i < simple.args.size(); i++) {
+            b.append(simple.args.get(i).toString());
+            if(i<simple.args.size()-1) {
                 b.append("*");
             }
         }
@@ -68,12 +69,30 @@ public class Prod extends Node {
                 if(j==i)m.mul(f.diff(var));
                 else m.mul(f);
             }
-            r.add(m);
+            if(!m.isZero())r.add(m);
         }
         if (r.getArgumentsCount() == 0 || r.isZero()) {
             return new Constant(0);
         }
         return r;
+    }
+
+    private Prod simplify() {
+        Prod ans = new Prod();
+        ans.sign = this.sign;
+        Constant newCon = new Constant(1);
+        for (Node n : args) {
+            if(n instanceof Constant) {
+                newCon.value = newCon.value*((Constant) n).value;
+            }
+        }
+        ans.args.add(newCon);
+        for (Node n: args) {
+            if(!(n instanceof Constant)) {
+                ans.args.add(n);
+            }
+        }
+        return ans;
     }
 
     @Override

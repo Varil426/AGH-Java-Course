@@ -4,8 +4,20 @@ public class Variable extends Node {
     Variable(String name){
         this.name = name;
     }
+    Variable(String name, double value){
+        this.name=name;
+        this.value=value;
+        if(this.value<0) {
+            minus();
+            this.value=this.value*(-1);
+        }
+    }
     void setValue(double d){
         value = d;
+        if(value<0) {
+            minus();
+            value=value*(-1);
+        }
     }
 
 
