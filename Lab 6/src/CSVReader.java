@@ -130,28 +130,28 @@ public class CSVReader {
         if(columnLabelsToInt.get(columnLabel)==null)throw new RuntimeException("Unknown Label");
         return getDouble(columnLabelsToInt.get(columnLabel));
     }
-    LocalTime getTime(int columnIndex) throws RuntimeException {
+    LocalTime getTime(int columnIndex) {
         return getTime(columnIndex, "HH:mm:ss");
     }
     LocalTime getTime(int columnIndex, String format) {
         if(get(columnIndex)=="")throw new RuntimeException("Out of bounds");
         return LocalTime.parse(get(columnIndex), DateTimeFormatter.ofPattern(format));
     }
-    LocalTime getTime(String columnLabel) throws RuntimeException {
+    LocalTime getTime(String columnLabel) {
         return getTime(columnLabel, "HH:mm:ss");
     }
     LocalTime getTime(String columnLabel, String format) {
         if(columnLabelsToInt.get(columnLabel)==null)throw new RuntimeException("Unknown Label");
         return getTime(columnLabelsToInt.get(columnLabel), format);
     }
-    LocalDate getDate(int columnIndex) throws RuntimeException {
+    LocalDate getDate(int columnIndex) {
         return getDate(columnIndex, "RR-mm-dd");
     }
     LocalDate getDate(int columnIndex, String format) {
         if(get(columnIndex)=="")throw new RuntimeException("Out of bounds");
         return LocalDate.parse(get(columnIndex), DateTimeFormatter.ofPattern(format));
     }
-    LocalDate getDate(String columnLabel) throws RuntimeException {
+    LocalDate getDate(String columnLabel) {
         return getDate(columnLabel, "RR-mm-dd");
     }
     LocalDate getDate(String columnLabel, String format) {

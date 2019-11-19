@@ -82,6 +82,13 @@ public class main {
                 double fare = reader.getDouble("Fare");
                 System.out.printf(Locale.US,"%d %s %f\n",id, name, fare);
             }
+            reader = new CSVReader("csv" + File.separator + "admin-units.csv",",",true);
+            for (int i = 0; i < 100 && reader.next(); i++) {
+                for (String s : reader.current) {
+                    System.out.printf("%s ", s);
+                }
+                System.out.println();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
