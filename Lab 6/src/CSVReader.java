@@ -87,7 +87,7 @@ public class CSVReader {
     }
     boolean isMissing(int columnIndex) {
         if(this.getRecordLength()<=columnIndex)return true;
-        if(current[columnIndex]!=null && current[columnIndex]!="")return false;
+        if(current[columnIndex]!=null && !current[columnIndex].isEmpty())return false;
         return true;
     }
     boolean isMissing(String columnLabel) {
@@ -148,7 +148,7 @@ public class CSVReader {
         return getDate(columnIndex, "RR-mm-dd");
     }
     LocalDate getDate(int columnIndex, String format) {
-        if(get(columnIndex)=="")throw new RuntimeException("Out of bounds");
+        if(get(columnIndex).isEmpty())throw new RuntimeException("Out of bounds");
         return LocalDate.parse(get(columnIndex), DateTimeFormatter.ofPattern(format));
     }
     LocalDate getDate(String columnLabel) {

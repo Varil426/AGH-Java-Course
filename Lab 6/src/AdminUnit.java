@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdminUnit {
     String name;
     int adminLevel;
@@ -6,6 +9,7 @@ public class AdminUnit {
     double density;
     AdminUnit parent;
     BoundingBox bbox = new BoundingBox();
+    List<AdminUnit> children = new ArrayList<>();
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
