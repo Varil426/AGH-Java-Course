@@ -14,6 +14,8 @@ public class AdminUnitList {
         CSVReader reader = new CSVReader(filename, ",", true);
         while (reader.next()) {
             AdminUnit tmp = new AdminUnit();
+            /*ArrayList<Double> x = new ArrayList<>();
+            ArrayList<Double> y = new ArrayList<>();*/
             for (int i = 0; i < reader.getRecordLength(); i++) {
                 if(!reader.isMissing(i)) {
                     if(i==0) {
@@ -34,8 +36,40 @@ public class AdminUnitList {
                     if(i==5) {
                         tmp.area = reader.getDouble(i);
                     }
+                    if(i==6) {
+                        tmp.density = reader.getDouble(i);
+                    }
+                    /*if(i==7 || i== 9 || i==11 || i==13) {
+                        x.add(reader.getDouble(i));
+                    }
+                    if(i==8 || i== 10 || i==12 || i==14) {
+                        y.add(reader.getDouble(i));
+                    }*/
                 }
             }
+            /*if(x.size()>0 && y.size()>0) {
+                double xmin = x.get(0);
+                double xmax = x.get(0);
+                double ymin = y.get(0);
+                double ymax = y.get(0);
+                //To jest tak, żeby brało pod uwagę, że mogą być 2 y i 4 x i inne kombinacje, a mimo to zawsze znajdywało xmax i xmin, ymax i ymin
+                for (int i = 1; i < x.size(); i++) {
+                    xmax=Math.max(xmax, x.get(i));
+                }
+                for (int i = 1; i < x.size(); i++) {
+                    xmin=Math.min(xmin, x.get(i));
+                }
+                for (int i = 1; i < y.size(); i++) {
+                    ymax=Math.max(ymax, y.get(i));
+                }
+                for (int i = 1; i < y.size(); i++) {
+                    ymin=Math.min(ymin, y.get(i));
+                }
+                tmp.bbox = new BoundingBox(xmin, ymin, xmax, ymax);
+            }
+            else {
+                tmp.bbox = new BoundingBox();
+            }*/
             units.add(tmp);
         }
         for (int i = 0; i < units.size(); i++) {
@@ -72,8 +106,6 @@ public class AdminUnitList {
         return ret;
     }
 
-
-    //Dużo wartości jest wciąż zerowych, po prześledzeniu na debuggerze kod wydaje działać się dobrze, po prostu dociera do obiektu, który nie ma już rodzica a wciąż parent.density == 0
     void fixMissingValues() {
         for (int i = 0; i < units.size(); i++) {
             if(units.get(i).density == 0 || units.get(i).population == 0) {
