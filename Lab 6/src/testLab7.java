@@ -22,6 +22,7 @@ public class testLab7 {
             System.out.println("\nSąsiedzi dla Jaworek\n");
             AdminUnit testUnitJaworki = unitList.selectByName("Jaworki", false).units.get(0);
             unitList.getNeighbours(testUnitJaworki, 10).list(out);
+            System.out.println(testUnitJaworki.bbox.getWKT());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,9 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AdminUnitList {
     List<AdminUnit> units = new ArrayList<>();
@@ -101,6 +98,40 @@ public class AdminUnitList {
             }
         }
         return result;
+    }
+    AdminUnitList sortInplaceByName(){
+        class SortByName implements Comparator<AdminUnit> {
+            @Override
+            public int compare(AdminUnit u1, AdminUnit u2) {
+                return u1.name.compareTo(u2.name);
+            }
+        }
+        AdminUnitList result = new AdminUnitList();
+        units.sort(new SortByName());
+        return this;
+    }
+    AdminUnitList sortInplaceByArea(){
+        this.units.sort(new Comparator<AdminUnit>() {
+            @Override
+            public int compare(AdminUnit u1, AdminUnit u2) {
+                return Double.compare(u1.area, u2.area);
+            }
+        });
+        return this;
+    }
+    AdminUnitList sortInplaceByPopulation(){
+        this.units.sort((x1,x2)->Double.compare(x1.population,x2.population));
+        return this;
+    }
+    AdminUnitList sortInplace(Comparator<AdminUnit> cmp){
+        this.units.sort(cmp);
+        return this;
+    }
+    AdminUnitList sort(Comparator<AdminUnit> cmp){
+        AdminUnitList result = new AdminUnitList();
+        //Do sprawdzenia
+        result.units = new ArrayList<AdminUnit>(this.units);
+        return result.sortInplace(cmp);
     }
 }
 
