@@ -14,62 +14,19 @@ public class AdminUnitList {
         CSVReader reader = new CSVReader(filename, ",", true);
         while (reader.next()) {
             AdminUnit tmp = new AdminUnit();
-            /*ArrayList<Double> x = new ArrayList<>();
-            ArrayList<Double> y = new ArrayList<>();*/
-            for (int i = 0; i < reader.getRecordLength(); i++) {
-                if(!reader.isMissing(i)) {
-                    if(i==0) {
-                        longToAdminUnit.put(reader.getLong(i), tmp);
-                    }
-                    if(i==1) {
-                        adminUnitToParentId.put(tmp, reader.getLong(i));
-                    }
-                    if(i==2) {
-                        tmp.name = reader.get(i);
-                    }
-                    if(i==3) {
-                        tmp.adminLevel = reader.getInt(i);
-                    }
-                    if(i==4) {
-                        tmp.population = reader.getDouble(i);
-                    }
-                    if(i==5) {
-                        tmp.area = reader.getDouble(i);
-                    }
-                    if(i==6) {
-                        tmp.density = reader.getDouble(i);
-                    }
-                    /*if(i==7 || i== 9 || i==11 || i==13) {
-                        x.add(reader.getDouble(i));
-                    }
-                    if(i==8 || i== 10 || i==12 || i==14) {
-                        y.add(reader.getDouble(i));
-                    }*/
+            if(!reader.isMissing("id"))longToAdminUnit.put(reader.getLong("id"), tmp);
+            if(!reader.isMissing("parent"))adminUnitToParentId.put(tmp, reader.getLong("parent"));
+            if(!reader.isMissing("name"))tmp.name = reader.get("name");
+            if(!reader.isMissing("admin_level"))tmp.adminLevel = reader.getInt("admin_level");
+            if(!reader.isMissing("population"))tmp.population = reader.getDouble("population");
+            if(!reader.isMissing("area"))tmp.area = reader.getDouble("area");
+            if(!reader.isMissing("density"))tmp.density = reader.getDouble("density");
+            //Wczytywanie punktów bounding box
+            for (int i = 7; i < 13; i+=2) {
+                if(!reader.isMissing(i) && !reader.isMissing(i+1)) {
+                    tmp.bbox.addPoint(reader.getDouble(i), reader.getDouble(i+1));
                 }
             }
-            /*if(x.size()>0 && y.size()>0) {
-                double xmin = x.get(0);
-                double xmax = x.get(0);
-                double ymin = y.get(0);
-                double ymax = y.get(0);
-                //To jest tak, żeby brało pod uwagę, że mogą być 2 y i 4 x i inne kombinacje, a mimo to zawsze znajdywało xmax i xmin, ymax i ymin
-                for (int i = 1; i < x.size(); i++) {
-                    xmax=Math.max(xmax, x.get(i));
-                }
-                for (int i = 1; i < x.size(); i++) {
-                    xmin=Math.min(xmin, x.get(i));
-                }
-                for (int i = 1; i < y.size(); i++) {
-                    ymax=Math.max(ymax, y.get(i));
-                }
-                for (int i = 1; i < y.size(); i++) {
-                    ymin=Math.min(ymin, y.get(i));
-                }
-                tmp.bbox = new BoundingBox(xmin, ymin, xmax, ymax);
-            }
-            else {
-                tmp.bbox = new BoundingBox();
-            }*/
             units.add(tmp);
         }
         for (int i = 0; i < units.size(); i++) {
@@ -94,7 +51,7 @@ public class AdminUnitList {
         AdminUnitList ret = new AdminUnitList();
         for (int i = 0; i < units.size(); i++) {
             if(regex) {
-                if(units.get(i).toString().matches(pattern)) {
+                if(units.get(i).name.matches(pattern)) {
                     ret.units.add(units.get(i));
                 }
             } else {
@@ -115,7 +72,7 @@ public class AdminUnitList {
     }
     void fixMissingValues(AdminUnit au) {
         AdminUnit parent = longToAdminUnit.get(adminUnitToParentId.get(au));
-        if(au.density == 0 &&  parent != null) {
+        if(au.density == 0 && parent != null) {
             if(parent.density == 0) {
                 fixMissingValues(parent);
             }
@@ -127,6 +84,23 @@ public class AdminUnitList {
             }
             au.population = au.area * au.density;
         }
+    }
+    AdminUnitList getNeighbours(AdminUnit unit, double maxdistance) {
+        AdminUnitList result = new AdminUnitList();
+        for (int i = 0; i < units.size(); i++) {
+            AdminUnit current = units.get(i);
+            if(current == unit)continue;
+            if(unit.adminLevel == 8) {
+                if(current.adminLevel == unit.adminLevel && (current.bbox.intersects(unit.bbox) || current.bbox.distanceTo(unit.bbox) < maxdistance)) {
+                    result.units.add(current);
+                }
+            } else {
+                if (current.adminLevel == unit.adminLevel && current.bbox.intersects(unit.bbox)) {
+                    result.units.add(current);
+                }
+            }
+        }
+        return result;
     }
 }
 

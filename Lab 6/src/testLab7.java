@@ -16,7 +16,12 @@ public class testLab7 {
             System.out.println("\nSelect By Name\n");
             unitList.selectByName("^Wola [KP].*", true).list(out);
             unitList.fixMissingValues();
-            unitList.list(out);
+            System.out.println("\nPo fixMissingValues\n");
+            unitList.selectByName("^Wola [KP].*", true).list(out);
+            //Sąsiedzi test
+            System.out.println("\nSąsiedzi dla Jaworek\n");
+            AdminUnit testUnitJaworki = unitList.selectByName("Jaworki", false).units.get(0);
+            unitList.getNeighbours(testUnitJaworki, 10).list(out);
         } catch (Exception e) {
             e.printStackTrace();
         }

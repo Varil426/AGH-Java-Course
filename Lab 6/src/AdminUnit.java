@@ -13,7 +13,7 @@ public class AdminUnit {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(name).append(": ").append(adminLevel).append(" Area: ").append(area).append(" Density: ").append(density).append(" Population: ").append(population);
+        builder.append(name).append(": ").append(adminLevel).append(" Area: ").append(area).append(" Density: ").append(density).append(" Population: ").append(population).append(" ").append(bbox.toString());
         return builder.toString();
     }
 }
