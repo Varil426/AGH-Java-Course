@@ -68,7 +68,7 @@ public class BoundingBox {
     }
     String getWKT() {
         StringBuilder string = new StringBuilder();
-        if(!this.isEmpty())string.append("POLYGON(").append(xmin).append(" ").append(ymin).append(", ").append(xmin).append(" ").append(ymax).append(", ").append(xmax).append(" ").append(ymax).append(", ").append(xmax).append(", ").append(ymin).append(")");
+        if(!this.isEmpty())string.append("LINESTRING(").append(xmin).append(" ").append(ymin).append(", ").append(xmin).append(" ").append(ymax).append(", ").append(xmax).append(" ").append(ymax).append(", ").append(xmax).append(" ").append(ymin).append(", ").append(xmin).append(" ").append(ymin).append(")");
         else throw new IllegalStateException("This bounding box is empty");
         return string.toString();
     }

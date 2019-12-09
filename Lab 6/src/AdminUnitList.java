@@ -1,6 +1,7 @@
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class AdminUnitList {
     List<AdminUnit> units = new ArrayList<>();
@@ -87,7 +88,7 @@ public class AdminUnitList {
         for (int i = 0; i < units.size(); i++) {
             AdminUnit current = units.get(i);
             if(current == unit)continue;
-            if(unit.adminLevel == 8) {
+            if(unit.adminLevel <= 8) {
                 if(current.adminLevel == unit.adminLevel && (current.bbox.intersects(unit.bbox) || current.bbox.distanceTo(unit.bbox) < maxdistance)) {
                     result.units.add(current);
                 }
@@ -106,7 +107,6 @@ public class AdminUnitList {
                 return u1.name.compareTo(u2.name);
             }
         }
-        AdminUnitList result = new AdminUnitList();
         units.sort(new SortByName());
         return this;
     }
@@ -129,9 +129,30 @@ public class AdminUnitList {
     }
     AdminUnitList sort(Comparator<AdminUnit> cmp){
         AdminUnitList result = new AdminUnitList();
-        //Do sprawdzenia
-        result.units = new ArrayList<AdminUnit>(this.units);
+        result.units = new ArrayList<AdminUnit>();
+        for (int i = 0; i < this.units.size(); i++) {
+            result.units.add(this.units.get(i));
+        }
         return result.sortInplace(cmp);
+    }
+    AdminUnitList filter(Predicate<AdminUnit> pred, int limit){
+        AdminUnitList result = new AdminUnitList();
+        for (int i = 0; i < this.units.size() && result.units.size()<=limit; i++) {
+            if(pred.test(this.units.get(i)))result.units.add(this.units.get(i));
+        }
+        return result;
+    }
+    AdminUnitList filter(Predicate<AdminUnit> pred) {
+        return filter(pred, this.units.size());
+    }
+    AdminUnitList filter(Predicate<AdminUnit> pred, int offset, int limit){
+        AdminUnitList filter = this.filter(pred, limit);
+        AdminUnitList result = new AdminUnitList();
+        if(offset<0 || offset>filter.units.size())throw new RuntimeException("Offset beyond limits");
+        for (int i = offset; i < filter.units.size(); i++) {
+            result.units.add(filter.units.get(i));
+        }
+        return result;
     }
 }
 

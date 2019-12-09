@@ -22,7 +22,22 @@ public class testLab7 {
             System.out.println("\nSąsiedzi dla Jaworek\n");
             AdminUnit testUnitJaworki = unitList.selectByName("Jaworki", false).units.get(0);
             unitList.getNeighbours(testUnitJaworki, 10).list(out);
+            System.out.println("\nJaworki na mapie\n");
             System.out.println(testUnitJaworki.bbox.getWKT());
+            System.out.println("\nJednostki na K posortowane według nazwy\n");
+            unitList.filter(a->a.name.startsWith("K")).sortInplaceByName().list(out);
+            System.out.println("\nJednostki będące powiatami w województwie małopolskim\n");
+            unitList.filter(a->(a.adminLevel == 6 && a.parent.name.equals("województwo małopolskie"))).list(out);
+            System.out.println("\nJednostki administracyjne mające w nazwie powiat z województwa podkarpackiego\n");
+            unitList.filter(a->(a.name.contains("powiat") && a.parent.name.equals("województwo podkarpackie"))).list(out);
+            System.out.println("\nTest AdminQueryUnit\n");
+            AdminUnitQuery query = new AdminUnitQuery()
+                    .selectFrom(unitList)
+                    .where(a->a.area>1000)
+                    .or(a->a.name.startsWith("Sz"))
+                    .sort((a,b)->Double.compare(a.area,b.area))
+                    .limit(100);
+            query.execute().list(out);
         } catch (Exception e) {
             e.printStackTrace();
         }
