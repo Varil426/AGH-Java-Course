@@ -36,7 +36,8 @@ public class ClockWithGui extends JPanel {
         for (int i = 0; i < 60; i++) {
             AffineTransform at = g2d.getTransform();
             g2d.rotate(2*Math.PI/60*i);
-            g2d.drawLine(0,-100,0,-110);
+            if(i%5==0)g2d.drawLine(0,-90,0,-110);
+            else g2d.drawLine(0,-100,0,-110);
             g2d.setTransform(at);
         }
         //Hour
