@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BouncingBallsPanel extends JPanel {
     AnimationThread thread = new AnimationThread();
@@ -9,46 +11,71 @@ public class BouncingBallsPanel extends JPanel {
     static class Ball{
         int x;
         int y;
+        int d;
         double vx;
         double vy;
         Color color;
 
-        public Ball(int x, int y, double vx, double vy, Color color) {
-            this.x = x;
-            this.y = y;
-            this.vx = vx;
-            this.vy = vy;
-            this.color = color;
+        public Ball() {
+            Random r = new Random();
+            x = r.nextInt(700);
+            y = r.nextInt(700);
+            d = r.nextInt(20)+5;
+            vx = r.nextInt(5)+1;
+            vy = r.nextInt(5)+10;
+            color = new Color(r.nextInt(255), r.nextInt(255),r.nextInt(255));
+        }
+
+        public void draw(Graphics2D g2d){
+            AffineTransform saveAT = g2d.getTransform();
+            this.render(g2d);
+            g2d.transform(saveAT);
+        }
+        public void render(Graphics2D g2d){
+            g2d.setColor(this.color);
+            g2d.fillOval(this.x, this.y, this.d, this.d);
         }
     }
 
     List<Ball> balls = new ArrayList<>();
 
-    //TODO Losowanie kilkunastu kulek na początek
-    //TODO funkcjonalność przycisków
     //TODO Podwójne bufforowanie
     //TODO Zderzenia kulek
+    //TODO Zderzenia ze ścianami - poprawić
 
     class AnimationThread extends Thread{
         boolean paused = true;
         public void run(){
             for(;;){
-                synchronized (thread){
+                synchronized (this){
                     if(paused) {
                         try {
-                            thread.wait();
+                            this.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
                 }
-                System.out.println(thread.getState());
-                //przesuń kulki
-                //wykonaj odbicia od ściany
-                //wywołaj repaint
-                //uśpij
+                balls.forEach(ball -> {
+                    ball.x += ball.vx;
+                    ball.y += ball.vy;
+                    if(ball.x + ball.d >= 700 || ball.x <= 0)ball.vx *= -1;
+                    if(ball.y + ball.d >= 700 || ball.y <= 0)ball.vy *= -1;
+                });
+                repaint();
+                //BouncingBallsPanel.this.repaint();
+                try {
+                    sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+    }
+
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        balls.forEach(ball -> ball.draw((Graphics2D) g));
     }
 
     BouncingBallsPanel(){
@@ -58,9 +85,14 @@ public class BouncingBallsPanel extends JPanel {
 
     void onStart(){
         System.out.println("Start or resume animation thread");
+        if(balls.isEmpty()){
+            for (int i = 0; i < 8; i++) {
+                balls.add(new Ball());
+            }
+        }
         thread.paused = false;
         synchronized (thread) {
-            thread.notifyAll();
+            thread.notify();
         }
     }
 
@@ -71,11 +103,14 @@ public class BouncingBallsPanel extends JPanel {
 
     void onPlus(){
         System.out.println("Add a ball");
-        balls.add(new Ball(10,10,1,1,new Color(255, 0,0)));
+        balls.add(new Ball());
     }
 
     void onMinus(){
-        System.out.println("Remove a ball");
-        balls.remove(balls.size()-1);
+        if(!balls.isEmpty()){
+            System.out.println("Remove a ball");
+            balls.remove(balls.size()-1);
+        }
+        else System.out.println("Nothing to remove");
     }
 }
