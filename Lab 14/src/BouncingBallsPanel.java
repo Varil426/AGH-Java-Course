@@ -72,7 +72,7 @@ public class BouncingBallsPanel extends JPanel {
                         Ball ball1 = balls.get(i);
                         Ball ball2 = balls.get(j);
                         double distance = ball1.distance(ball2);
-                        if(distance<=ball1.d+ball2.d){
+                        if(distance<=ball1.radius+ball2.radius){
                             double ball1CentreX = ball1.x+ball1.radius;
                             double ball1CentreY = ball1.y+ball1.radius;
                             double ball2CentreX = ball2.x+ball2.radius;
