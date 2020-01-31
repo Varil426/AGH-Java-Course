@@ -23,7 +23,7 @@ public class BouncingBallsPanel extends JPanel {
             x = r.nextInt(700);
             y = r.nextInt(700);
             d = r.nextInt(20)+5;
-            vx = r.nextInt(5)+1;
+            vx = r.nextInt(5)+10;
             vy = r.nextInt(5)+10;
             color = new Color(r.nextInt(255), r.nextInt(255),r.nextInt(255));
             radius = d/2;
